@@ -155,7 +155,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 <div class="footer-note">数据来源：淄博路测原始数据 | 统计周期：2026年W15(04/13) ~ W27(07/12) | 城市范围：淄博市+滨州市+山东省+张店区 | 成本：淄博市5-6月实际发生成本 | VHR口径：车辆名称去重，约车ID计数</div>
 
 <script>
-var weeks = ["2026W15\n04/13-04/19", "2026W16\n04/20-04/26", "2026W17\n04/27-05/03", "2026W18\n05/04-05/10", "2026W19\n05/11-05/17", "2026W20\n05/18-05/24", "2026W21\n05/25-05/31", "2026W22\n06/01-06/07", "2026W23\n06/08-06/14", "2026W24\n06/15-06/21", "2026W25\n06/22-06/28", "2026W26\n06/29-07/05", "2026W27\n07/06-07/12"];
+var weeks = ["2026W16\n04/13-04/19", "2026W17\n04/20-04/26", "2026W18\n04/27-05/03", "2026W19\n05/04-05/10", "2026W20\n05/11-05/17", "2026W21\n05/18-05/24", "2026W22\n05/25-05/31", "2026W23\n06/01-06/07", "2026W24\n06/08-06/14", "2026W25\n06/15-06/21", "2026W26\n06/22-06/28", "2026W27\n06/29-07/05", "2026W28\n07/06-07/12"];
 function initChart() {
     var container = document.getElementById('mainChart');
     if (!container) return;
@@ -171,12 +171,12 @@ grid:{left:'3%',right:'5%',bottom:'10%',top:'15%',containLabel:true},
 xAxis:{type:'category',data:weeks,axisLabel:{fontSize:10,interval:0,rotate:35,color:'#333',fontWeight:'500',formatter:function(v){return v.split(String.fromCharCode(10))[1]||v}},axisLine:{lineStyle:{color:'#999',width:1.5}},axisTick:{show:true,lineStyle:{color:'#999'}},name:'自然周',nameTextStyle:{fontSize:10,color:'#333',fontWeight:'bold'}},
 yAxis:[{type:'value',name:'车辆数(台)',nameTextStyle:{fontSize:9,color:'#666'},position:'left',max:40,axisLabel:{fontSize:8},splitLine:{lineStyle:{type:'dashed',color:'#eee'}}},{type:'value',name:'班次数(次)',nameTextStyle:{fontSize:9,color:'#666'},position:'right',max:220,axisLabel:{fontSize:8},splitLine:{show:false}}],
 series:[
-{name:'高精地图采集',type:'bar',stack:'vehicle',yAxisIndex:0,data:[0, 8, 8, 7, 0, 1, 0, 0, 0, 0, 4, 4, 1],itemStyle:{color:'#FF6B35'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
-{name:'模型数据采集',type:'bar',stack:'vehicle',yAxisIndex:0,data:[0, 0, 0, 7, 7, 6, 0, 5, 7, 7, 0, 3, 7],itemStyle:{color:'#4A90D9'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
-{name:'扩路测试',type:'bar',stack:'vehicle',yAxisIndex:0,data:[0, 0, 0, 0, 0, 0, 0, 8, 3, 1, 1, 7, 8],itemStyle:{color:'#7ED321'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
-{name:'M61车型验证',type:'bar',stack:'vehicle',yAxisIndex:0,data:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 15],itemStyle:{color:'#BD10E0'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
-{name:'其他测试',type:'bar',stack:'vehicle',yAxisIndex:0,data:[0, 0, 0, 0, 0, 0, 1, 6, 3, 7, 5, 7, 3],itemStyle:{color:'#9B9B9B'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
-{name:'总班次',type:'line',yAxisIndex:1,data:[0, 50, 54, 27, 34, 17, 3, 64, 56, 58, 32, 73, 149],itemStyle:{color:'#FF9500',width:2.5},lineStyle:{color:'#FF9500',width:2.5},symbol:'circle',symbolSize:6,label:{show:true,position:'top',fontSize:9,fontWeight:'bold',color:'#FF8000',formatter:'{c}'},areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(255,149,0,0.22)'},{offset:1,color:'rgba(255,149,0,0.02)'}]}}}
+{name:'高精地图采集',type:'bar',stack:'vehicle',yAxisIndex:0,data:[8, 8, 7, 0, 1, 0, 0, 0, 0, 4, 4, 1, 0],itemStyle:{color:'#FF6B35'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
+{name:'模型数据采集',type:'bar',stack:'vehicle',yAxisIndex:0,data:[0, 0, 7, 7, 6, 0, 5, 7, 7, 0, 3, 7, 3],itemStyle:{color:'#4A90D9'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
+{name:'扩路测试',type:'bar',stack:'vehicle',yAxisIndex:0,data:[0, 0, 0, 0, 0, 0, 8, 3, 1, 1, 7, 8, 8],itemStyle:{color:'#7ED321'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
+{name:'M61车型验证',type:'bar',stack:'vehicle',yAxisIndex:0,data:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 15, 14],itemStyle:{color:'#BD10E0'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
+{name:'其他测试',type:'bar',stack:'vehicle',yAxisIndex:0,data:[0, 0, 0, 0, 0, 1, 6, 3, 7, 5, 7, 3, 7],itemStyle:{color:'#9B9B9B'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
+{name:'总班次',type:'line',yAxisIndex:1,data:[50, 54, 27, 34, 17, 3, 64, 56, 58, 32, 73, 149, 164],itemStyle:{color:'#FF9500',width:2.5},lineStyle:{color:'#FF9500',width:2.5},symbol:'circle',symbolSize:6,label:{show:true,position:'top',fontSize:9,fontWeight:'bold',color:'#FF8000',formatter:'{c}'},areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(255,149,0,0.22)'},{offset:1,color:'rgba(255,149,0,0.02)'}]}}}
 ]
 };
     vehicleChart.setOption(option);

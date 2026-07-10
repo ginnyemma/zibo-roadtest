@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>淄博路测复盘</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#fff;width:1440px;height:1400px;padding:16px 24px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:3px solid #FFD000;padding-bottom:5px}
+.title-main{font-size:24px;font-weight:bold;color:#1a1a1a;display:flex;align-items:center;gap:10px}
+.title-icon{width:32px;height:32px;background:linear-gradient(135deg,#FFD000,#FF9500);border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:bold}
+.logo-area{font-size:14px;color:#666;font-weight:500}
+.cost-overview{background:linear-gradient(90deg,#FFF8E1 0%,#FFFDE7 50%,#E3F2FD 100%);border:2px solid #FFB300;border-radius:8px;padding:8px 14px;margin-bottom:8px}
+.cost-title{font-size:12px;font-weight:bold;color:#333;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.cost-cards{display:flex;gap:16px}
+.cost-card{flex:1;background:rgba(255,255,255,0.8);border-radius:6px;padding:6px 10px;border-left:4px solid}
+.cost-card.may{border-left-color:#FF9800}.cost-card.jun{border-left-color:#2196F3}.cost-card.total{border-left-color:#4CAF50}
+.cost-month{font-size:11px;font-weight:bold;color:#555;margin-bottom:3px}
+.cost-amount{font-size:18px;font-weight:bold}
+.cost-card.may .cost-amount{color:#E65100}.cost-card.jun .cost-amount{color:#1565C0}.cost-card.total .cost-amount{color:#2E7D32}
+.cost-detail{font-size:9px;color:#777;margin-top:2px;line-height:1.35}
+.resource-timeline{background:linear-gradient(90deg,#FFF8E1 0%,#FFFFFF 100%);border:2px solid #FFD000;border-radius:8px;padding:8px 14px;margin-bottom:10px}
+.timeline-title{font-size:11px;font-weight:bold;color:#333;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.timeline-arrow{color:#FF9500;font-size:13px}
+.timeline-content{display:flex;flex-wrap:wrap;gap:0;font-size:9px;line-height:1.45}
+.timeline-item{padding:2px 6px;border-right:1px dashed #ddd;white-space:nowrap}
+.timeline-item:last-child{border-right:none}
+.tl-date{color:#FF8000;font-weight:bold}.tl-desc{color:#444}
+.main-chart-section{display:flex;flex-direction:column;margin-bottom:10px}
+.chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px}
+.chart-title-row{display:flex;align-items:center;gap:12px}
+.chart-labels{display:flex;gap:10px;font-size:9px}
+.label-item{display:flex;align-items:center;gap:2px}
+.label-color{width:11px;height:11px;border-radius:2px}
+.stage-annotations{display:flex;gap:14px;font-size:9px}
+.stage-tag{padding:2px 8px;border-radius:10px;font-weight:500;white-space:nowrap}
+.chart-container{width:100%;height:320px;background:#fafafa;border-radius:6px;border:1px solid #eee}
+.capability-section{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cap-card{background:linear-gradient(180deg,#FAFAFA 0%,#F5F5F5 100%);border:1px solid #E0E0E0;border-radius:8px;padding:8px;border-top:3px solid}
+.cap-card:nth-child(1){border-top-color:#FF6B35}.cap-card:nth-child(2){border-top-color:#4A90D9}.cap-card:nth-child(3){border-top-color:#7ED321}.cap-card:nth-child(4){border-top-color:#BD10E0}
+.cap-title{font-size:12px;font-weight:bold;color:#333;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.cap-content{font-size:9px;color:#555;line-height:1.55}
+.cap-item{margin-bottom:2px;display:flex;align-items:flex-start;gap:2px}
+.cap-bullet{color:#FF9500;flex-shrink:0}
+.highlight{color:#FF8000;font-weight:600}
+.status-ok{color:#27AE60;font-weight:500}
+.footer-note{margin-top:6px;font-size:8px;color:#888;text-align:center;border-top:1px solid #eee;padding-top:4px}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="title-main"><div class="title-icon">淄</div><span>淄博路测复盘趋势图</span></div>
+<div class="logo-area">美团 | 道路测试</div>
+</div>
+
+<div class="cost-overview">
+<div class="cost-title"><span>💰</span><span>成本概况（淄博市 | 5-6月）</span></div>
+<div class="cost-cards">
+<div class="cost-card may">
+<div class="cost-month">📅 2026年5月</div>
+<div class="cost-amount">364.2万</div>
+<div class="cost-detail">人车259.0万 | 非人12.5万 | 场地70.4万 | 运营22.0万 | 单公里¥4.31 | 78.1万km</div>
+</div>
+<div class="cost-card jun">
+<div class="cost-month">📅 2026年6月</div>
+<div class="cost-amount">381.9万</div>
+<div class="cost-detail">人车290.3万 | 非人25.1万 | 场地36.5万 | 运营29.9万 | 单公里¥3.50 | 102.9万km</div>
+</div>
+<div class="cost-card total">
+<div class="cost-month">📊 5-6月合计</div>
+<div class="cost-amount">746.0万</div>
+<div class="cost-detail">环比+4.9% | 单公里优化-18.8% | M61投入增加、规模扩大至30台+/周</div>
+</div>
+</div>
+</div>
+
+<div class="resource-timeline">
+<div class="timeline-title"><span class="timeline-arrow">→</span><span>车辆资源调配</span></div>
+<div class="timeline-content">
+<div class="timeline-item"><span class="tl-date">04/13</span><span class="tl-desc">深圳→淄博 8台H24(采集)</span></div>
+<div class="timeline-item"><span class="tl-date">05/13</span><span class="tl-desc">滨州→淄博 1台H24(M61回流)</span></div>
+<div class="timeline-item"><span class="tl-date">05/22</span><span class="tl-desc">深圳→淄博 2台H24(M61扩路)</span></div>
+<div class="timeline-item"><span class="tl-date">06/26</span><span class="tl-desc">深圳→淄博 5台H24G(路线验证)</span></div>
+<div class="timeline-item"><span class="tl-date">06/27</span><span class="tl-desc">深圳→淄博 5台M61(改制交付)</span></div>
+<div class="timeline-item"><span class="tl-date">06/29</span><span class="tl-desc">滨州→淄博 5台M61(落地测试)</span></div>
+<div class="timeline-item"><span class="tl-date">07/04</span><span class="tl-desc">深圳→淄博 5台H24G(整备完毕)</span></div>
+<div class="timeline-item"><span class="tl-date">07/10</span><span class="tl-desc">阜阳→淄博 8台M61(出厂交付)</span></div>
+</div>
+</div>
+
+<div class="main-chart-section">
+<div class="chart-header">
+<div class="chart-title-row">
+<div class="chart-labels">
+<div class="label-item"><div class="label-color" style="background:#FF6B35"></div><span>高精地图采集</span></div>
+<div class="label-item"><div class="label-color" style="background:#4A90D9"></div><span>模型数据采集</span></div>
+<div class="label-item"><div class="label-color" style="background:#7ED321"></div><span>扩路测试</span></div>
+<div class="label-item"><div class="label-color" style="background:#BD10E0"></div><span>M61车型验证</span></div>
+</div>
+</div>
+<div class="stage-annotations">
+<span class="stage-tag" style="background:#FFF3E0;color:#E65100;">W15-W19 高精地图采集期</span>
+<span class="stage-tag" style="background:#E3F2FD;color:#1565C0;">W20-W25 M61验证启动</span>
+<span class="stage-tag" style="background:#F3E5F5;color:#7B1FA2;">W26-W27 规模化测试</span>
+</div>
+</div>
+<div id="mainChart" class="chart-container"></div>
+</div>
+
+<div class="capability-section">
+<div class="cap-card">
+<div class="cap-title">🔋 社会化补能</div>
+<div class="cap-content">
+<div class="cap-item"><span class="cap-bullet">●</span><span>结算单价：<span class="highlight">1.05~1.23元/度</span></span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span>补能频次：<span class="highlight">2次/台/天</span></span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span>时段：早06:30-07:20 / 晚15:30-16:00</span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span>复用云控/运维吃饭时间补能</span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span>场地充电单价：<span class="status-ok">0.85元/度</span>(10-15度/台/天)</span></div>
+</div>
+</div>
+<div class="cap-card">
+<div class="cap-title">🅿️ 社会化停车</div>
+<div class="cap-content">
+<div class="cap-item"><span class="cap-bullet">●</span><span>规模：<span class="highlight">28车(14M61+9H24+5H24G)</span>/18人</span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span>原则：合规优先、风险分级、需求匹配</span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span>分布：临淄区(主)+张店区(V61)+淄川/桓台</span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span>停车状态：<span class="status-ok">均未付费</span></span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span>类型：特来电/国家电网充电站、酒店、医院等</span></div>
+</div>
+</div>
+<div class="cap-card">
+<div class="cap-title">👥 人员管理</div>
+<div class="cap-content">
+<div class="cap-item"><span class="cap-bullet">●</span><span>总人数：<span class="highlight">130人</span></span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span>安全员(采集)：119人(91.5%) - 6000元/月</span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span>co-driver：4人(3.1%) - 9500元/月</span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span>区域运维：7人(5.4%) - 4700~5000元/月</span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span>排班：H24单班次/H24G单双班次/M61双班次</span></div>
+</div>
+</div>
+<div class="cap-card">
+<div class="cap-title">🛠️ 路测工具</div>
+<div class="cap-content">
+<div class="cap-item"><span class="cap-bullet">●</span><span><b>大象专项群</b>：日常同步/故障上报/事故同步</span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span><b>美团自动车APP</b>：收发车/监控/远程控制/摇车打卡</span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span><b>水印相机</b>：上下班打卡/事故取证拍照</span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span><b>路测百宝箱</b>：自检填报/日报填写/硬盘流转</span></div>
+<div class="cap-item"><span class="cap-bullet">●</span><span><b>Eve运管平台</b>：车辆调度申请(挪车/恢复路由)</span></div>
+</div>
+</div>
+</div>
+
+<div class="footer-note">数据来源：淄博路测原始数据 | 统计周期：2026年W15(04/13) ~ W27(07/12) | 城市范围：淄博市+滨州市+山东省+张店区 | 成本：淄博市5-6月实际发生成本 | VHR口径：车辆名称去重，约车ID计数</div>
+
+<script>
+var weeks = ["2026W15\n04/13-04/19", "2026W16\n04/20-04/26", "2026W17\n04/27-05/03", "2026W18\n05/04-05/10", "2026W19\n05/11-05/17", "2026W20\n05/18-05/24", "2026W21\n05/25-05/31", "2026W22\n06/01-06/07", "2026W23\n06/08-06/14", "2026W24\n06/15-06/21", "2026W25\n06/22-06/28", "2026W26\n06/29-07/05", "2026W27\n07/06-07/12"];
+function initChart() {
+    var container = document.getElementById('mainChart');
+    if (!container) return;
+    if (typeof echarts === 'undefined') {
+        setTimeout(initChart, 200);
+        return;
+    }
+    var vehicleChart = echarts.init(container);
+    var option = {
+tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'rgba(255,255,255,0.95)',borderColor:'#ddd',borderWidth:1,textStyle:{fontSize:10},formatter:function(params){var r=params[0].axisValue.replace(/\n/g,' ')+'<br/>';var tv=0,ts=0;params.forEach(function(p){if(p.seriesName&&p.value>0){r+=p.marker+p.seriesName+': '+p.value+(p.seriesIndex<5?' 台':' 次')+'<br/>';if(p.seriesIndex<5)tv+=p.value;else ts+=p.value}});r+='----------------<br/>合计车辆: '+tv+' 台<br/>合计班次: '+ts+' 次';return r}},
+legend:{show:false},
+grid:{left:'3%',right:'5%',bottom:'10%',top:'15%',containLabel:true},
+xAxis:{type:'category',data:weeks,axisLabel:{fontSize:10,interval:0,rotate:35,color:'#333',fontWeight:'500',formatter:function(v){return v.split(String.fromCharCode(10))[1]||v}},axisLine:{lineStyle:{color:'#999',width:1.5}},axisTick:{show:true,lineStyle:{color:'#999'}},name:'自然周',nameTextStyle:{fontSize:10,color:'#333',fontWeight:'bold'}},
+yAxis:[{type:'value',name:'车辆数(台)',nameTextStyle:{fontSize:9,color:'#666'},position:'left',max:40,axisLabel:{fontSize:8},splitLine:{lineStyle:{type:'dashed',color:'#eee'}}},{type:'value',name:'班次数(次)',nameTextStyle:{fontSize:9,color:'#666'},position:'right',max:220,axisLabel:{fontSize:8},splitLine:{show:false}}],
+series:[
+{name:'高精地图采集',type:'bar',stack:'vehicle',yAxisIndex:0,data:[0, 8, 8, 7, 0, 1, 0, 0, 0, 0, 4, 4, 1],itemStyle:{color:'#FF6B35'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
+{name:'模型数据采集',type:'bar',stack:'vehicle',yAxisIndex:0,data:[0, 0, 0, 7, 7, 6, 0, 5, 7, 7, 0, 3, 7],itemStyle:{color:'#4A90D9'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
+{name:'扩路测试',type:'bar',stack:'vehicle',yAxisIndex:0,data:[0, 0, 0, 0, 0, 0, 0, 8, 3, 1, 1, 7, 8],itemStyle:{color:'#7ED321'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
+{name:'M61车型验证',type:'bar',stack:'vehicle',yAxisIndex:0,data:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 15],itemStyle:{color:'#BD10E0'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
+{name:'其他测试',type:'bar',stack:'vehicle',yAxisIndex:0,data:[0, 0, 0, 0, 0, 0, 1, 6, 3, 7, 5, 7, 3],itemStyle:{color:'#9B9B9B'},label:{show:true,position:'inside',fontSize:8,color:'#fff',formatter:function(c){return c.value>0?c.value:''}},barWidth:'50%'},
+{name:'总班次',type:'line',yAxisIndex:1,data:[0, 50, 54, 27, 34, 17, 3, 64, 56, 58, 32, 73, 149],itemStyle:{color:'#FF9500',width:2.5},lineStyle:{color:'#FF9500',width:2.5},symbol:'circle',symbolSize:6,label:{show:true,position:'top',fontSize:9,fontWeight:'bold',color:'#FF8000',formatter:'{c}'},areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(255,149,0,0.22)'},{offset:1,color:'rgba(255,149,0,0.02)'}]}}}
+]
+};
+    vehicleChart.setOption(option);
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { setTimeout(initChart, 300); });
+} else {
+    setTimeout(initChart, 300);
+}
+window.addEventListener('resize', function() {
+    try { var c = document.getElementById('mainChart'); if(c && c._echarts_instance_) c._echarts_instance_.resize(); } catch(e) {}
+});
+</script>
+</body>
+</html>

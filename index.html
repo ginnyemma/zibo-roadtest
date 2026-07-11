@@ -7,69 +7,61 @@
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#fff;width:1440px;height:1720px;padding:16px 24px}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#fff;width:1440px;height:1480px;padding:16px 24px}
 .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:3px solid #FFD000;padding-bottom:5px}
 .title-main{font-size:24px;font-weight:bold;color:#1a1a1a;display:flex;align-items:center;gap:10px}
 .title-icon{width:32px;height:32px;background:linear-gradient(135deg,#FFD000,#FF9500);border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:bold}
 .logo-area{font-size:14px;color:#666;font-weight:500}
+
+/* ===== 成本概况（三阶段） ===== */
 .cost-overview{background:linear-gradient(90deg,#FFF8E1 0%,#FFFDE7 50%,#E3F2FD 100%);border:2px solid #FFB300;border-radius:8px;padding:8px 14px;margin-bottom:8px}
 .cost-title{font-size:12px;font-weight:bold;color:#333;margin-bottom:5px;display:flex;align-items:center;gap:5px}
 .cost-cards{display:flex;gap:16px}
-.cost-card{flex:1;background:rgba(255,255,255,0.8);border-radius:6px;padding:6px 10px;border-left:4px solid}
-.cost-card.may{border-left-color:#FF9800}.cost-card.jun{border-left-color:#2196F3}.cost-card.total{border-left-color:#4CAF50}
-.cost-month{font-size:11px;font-weight:bold;color:#555;margin-bottom:3px}
+.cost-card{flex:1;background:rgba(255,255,255,0.85);border-radius:6px;padding:7px 12px;border-left:4px solid;border-top:1px solid transparent}
+.cost-card.phase-map{border-left-color:#FF6B35}.cost-card.phase-expand{border-left-color:#7ED321}.cost-card.phase-m61{border-left-color:#BD10E0}
+.cost-phase-name{font-size:11px;font-weight:bold;margin-bottom:3px;display:flex;align-items:center;gap:4px}
+.phase-map .cost-phase-name{color:#E65100}
+.phase-expand .cost-phase-name{color:#388E3C}
+.phase-m61 .cost-phase-name{color:#7B1FA2}
+.cost-phase-period{font-size:9px;color:#999;margin-bottom:3px}
 .cost-amount{font-size:18px;font-weight:bold}
-.cost-card.may .cost-amount{color:#E65100}.cost-card.jun .cost-amount{color:#1565C0}.cost-card.total .cost-amount{color:#2E7D32}
-.cost-detail{font-size:9px;color:#777;margin-top:2px;line-height:1.35}
-.resource-timeline{background:linear-gradient(90deg,#FFF8E1 0%,#FFFFFF 100%);border:2px solid #FFD000;border-radius:8px;padding:8px 14px;margin-bottom:10px}
-.timeline-title{font-size:11px;font-weight:bold;color:#333;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.phase-map .cost-amount{color:#E65100}.phase-expand .cost-amount{color:#2E7D32}.phase-m61 .cost-amount{color:#7B1FA2}
+.cost-detail{font-size:9px;color:#777;margin-top:2px;line-height:1.45}
+.cost-highlight{display:inline-block;background:#FFF3E0;color:#E65100;padding:0 4px;border-radius:3px;font-weight:600;font-size:9px}
+
+.resource-timeline{background:#FFFEF5;border:1.5px solid #FFD54F;border-radius:8px;padding:10px 14px;margin-bottom:10px}
+.timeline-title{font-size:11px;font-weight:bold;color:#333;margin-bottom:8px;display:flex;align-items:center;gap:5px}
 .timeline-arrow{color:#FF9500;font-size:13px}
-.timeline-content{display:flex;flex-wrap:wrap;gap:0;font-size:9px;line-height:1.45}
-.timeline-item{padding:2px 6px;border-right:1px dashed #ddd;white-space:nowrap}
-.timeline-item:last-child{border-right:none}
-.tl-date{color:#FF8000;font-weight:bold}.tl-desc{color:#444}
+/* 车辆资源调配 - 时间轴+箭头节点 */
+.resource-axis{position:relative;height:52px;margin-top:4px}
+.axis-line{position:absolute;top:22px;left:10px;right:10px;height:2px;background:linear-gradient(90deg,#FFD54F,#FFB300)}
+.axis-weeks{position:absolute;top:28px;left:10px;right:10px;display:flex;justify-content:space-between;font-size:7.5px;color:#aaa}
+.axis-node{position:absolute;top:14px;width:16px;height:16px;border-radius:50%;background:#fff;border:2.5px solid #FF9500;z-index:2;cursor:default;display:flex;align-items:center;justify-content:center;font-size:8px;color:#FF8000;font-weight:bold;box-shadow:0 2px 4px rgba(255,149,0,0.3)}
+.node-label{position:absolute;top:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:8px;font-weight:bold;text-align:center;line-height:1.25;z-index:3}
+.node-label-date{color:#E65100;font-size:9px}
+.node-label-desc{color:#555;background:rgba(255,255,255,0.95);padding:1px 4px;border-radius:3px;border:1px solid #FFE0B2;box-shadow:0 1px 3px rgba(0,0,0,0.1);margin-top:1px}
+.node-arrow{position:absolute;top:30px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #FF9500;z-index:1}
 
-/* ===== 三阶段划分（新增） ===== */
-.phase-section{margin-bottom:10px}
-.phase-header{font-size:13px;font-weight:bold;color:#333;margin-bottom:6px;display:flex;align-items:center;gap:6px}
-.phase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.phase-card{background:#fff;border:2px solid;border-radius:8px;padding:10px 12px;position:relative;overflow:hidden}
-.phase-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
-.phase-card.phase-map{border-color:#FF6B35}.phase-card.phase-map::before{background:linear-gradient(90deg,#FF6B35,#FFAB91)}
-.phase-card.phase-expand{border-color:#7ED321}.phase-card.phase-expand::before{background:linear-gradient(90deg,#7ED321,#C5E1A5)}
-.phase-card.phase-m61{border-color:#BD10E0}.phase-card.phase-m61::before{background:linear-gradient(90deg,#BD10E0,#E1BEE7)}
-.phase-badge{display:inline-block;font-size:11px;font-weight:bold;color:#fff;padding:2px 10px;border-radius:12px;margin-bottom:6px}
-.phase-map .phase-badge{background:#FF6B35}
-.phase-expand .phase-badge{background:#7ED321}
-.phase-m61 .phase-badge{background:#BD10E0}
-.phase-period{font-size:10px;color:#888;margin-bottom:6px;font-weight:500}
-.phase-sub{margin-bottom:8px}
-.phase-sub-title{font-size:10px;font-weight:bold;color:#555;margin-bottom:3px;display:flex;align-items:center;gap:4px}
-.phase-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.phase-map .phase-dot{background:#FF6B35}
-.phase-expand .phase-dot{background:#7ED321}
-.phase-m61 .phase-dot{background:#BD10E0}
-.phase-stats{font-size:9px;color:#444;line-height:1.6}
-.phase-stat-row{display:flex;justify-content:space-between;align-items:center;padding:1px 0}
-.phase-stat-label{color:#666}
-.phase-stat-value{font-weight:bold;color:#333}
-.phase-cost-row{margin-top:6px;padding-top:6px;border-top:1px dashed #eee;display:flex;justify-content:space-between;align-items:center}
-.phase-cost-label{font-size:9px;color:#888}
-.phase-cost-value{font-size:14px;font-weight:bold}
-.phase-map .phase-cost-value{color:#E65100}
-.phase-expand .phase-cost-value{color:#2E7D32}
-.phase-m61 .phase-cost-value{color:#7B1FA2}
-.phase-efficiency{display:inline-block;font-size:9px;background:#FFF3E0;color:#E65100;padding:1px 6px;border-radius:8px;margin-left:4px;font-weight:600}
-
+/* ===== 图表区域（含阶段标注条） ===== */
 .main-chart-section{display:flex;flex-direction:column;margin-bottom:10px}
-.chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px}
+.chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px}
 .chart-title-row{display:flex;align-items:center;gap:12px}
 .chart-labels{display:flex;gap:10px;font-size:9px}
 .label-item{display:flex;align-items:center;gap:2px}
 .label-color{width:11px;height:11px;border-radius:2px}
-.stage-annotations{display:flex;gap:14px;font-size:9px}
-.stage-tag{padding:2px 8px;border-radius:10px;font-weight:500;white-space:nowrap}
-.chart-container{width:100%;height:300px;background:#fafafa;border-radius:6px;border:1px solid #eee}
+
+/* ===== 阶段时间轴标注条（参考图风格） ===== */
+.phase-timeline-bar{position:relative;height:36px;margin-bottom:4px;display:flex;align-items:stretch;border-bottom:1px solid #eee}
+.phase-block{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;color:#fff;position:relative;z-index:1;text-shadow:0 1px 2px rgba(0,0,0,0.2);letter-spacing:1px}
+.phase-block.map{background:linear-gradient(135deg,#FF6B35 0%,#FF8A50 100%)}
+.phase-block.expand{background:linear-gradient(135deg,#7ED321 0%,#9ACD32 100%)}
+.phase-block.m61{background:linear-gradient(135deg,#BD10E0 0%,#CE93D8 100%)}
+.phase-gap{flex:1;position:relative}
+.phase-gap::after{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:#ddd}
+.phase-sub-label{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:8px;color:#888;white-space:nowrap;font-weight:normal}
+
+.chart-container{width:100%;height:320px;background:#fafafa;border-radius:6px;border:1px solid #eee}
+
 .capability-section{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .cap-card{background:linear-gradient(180deg,#FAFAFA 0%,#F5F5F5 100%);border:1px solid #E0E0E0;border-radius:8px;padding:8px;border-top:3px solid}
 .cap-card:nth-child(1){border-top-color:#FF6B35}.cap-card:nth-child(2){border-top-color:#4A90D9}.cap-card:nth-child(3){border-top-color:#7ED321}.cap-card:nth-child(4){border-top-color:#BD10E0}
@@ -87,111 +79,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 <div class="title-main"><div class="title-icon">淄</div><span>淄博路测复盘趋势图</span></div><div class="logo-area">美团 | 道路测试</div>
 </div>
 
+<!-- ===== 成本概况（三阶段版本） ===== -->
 <div class="cost-overview">
-<div class="cost-title"><span>💰</span><span>成本概况（淄博市 | 5-6月）</span></div>
+<div class="cost-title"><span>💰</span><span>各阶段成本与运营数据总览</span></div>
 <div class="cost-cards">
-<div class="cost-card may">
-<div class="cost-month">📅 2026年5月</div>
-<div class="cost-amount">364.2万</div>
-<div class="cost-detail">人车259.0万 | 非人12.5万 | 场地70.4万 | 运营22.0万 | 单公里¥4.31 | 78.1万km</div>
+<div class="cost-card phase-map">
+<div class="cost-phase-name">① 地图采集</div>
+<div class="cost-phase-period">4月13日 - 7月5日（两阶段）</div>
+<div class="cost-amount">14.29万</div>
+<div class="cost-detail">第一阶段: 8台车 / 115班次 / 9人 / 有效率<span class="cost-highlight">74%</span><br>第二阶段: 5台车 / 24班次 / 5人 / 有效率<span class="cost-highlight">70%</span></div>
 </div>
-<div class="cost-card jun">
-<div class="cost-month">📅 2026年6月</div>
-<div class="cost-amount">381.9万</div>
-<div class="cost-detail">人车290.3万 | 非人25.1万 | 场地36.5万 | 运营29.9万 | 单公里¥3.50 | 102.9万km</div>
+<div class="cost-card phase-expand">
+<div class="cost-phase-name">② 扩路测试</div>
+<div class="cost-phase-period">5月25日 - 至今</div>
+<div class="cost-amount">11.32万</div>
+<div class="cost-detail">共投入 <b>14台</b>车 / 139班次 / 12人<br>单班次自驾里程 80km / 自驾时长 3.1h</div>
 </div>
-<div class="cost-card total">
-<div class="cost-month">📊 5-6月合计</div>
-<div class="cost-amount">746.0万</div>
-<div class="cost-detail">环比+4.9% | 单公里优化-18.8% | M61投入增加、规模扩大至30台+/周</div>
+<div class="cost-card phase-m61">
+<div class="cost-phase-name">③ M61验证</div>
+<div class="cost-phase-period">6月22日 - 至今</div>
+<div class="cost-amount">10.69万</div>
+<div class="cost-detail">共投入 <b>20台</b>车 / 205班次 / 17人<br>单班次自驾里程 116.9km / 自驾时长 4.75h</div>
 </div>
-</div>
-</div>
-
-<div class="resource-timeline">
-<div class="timeline-title"><span class="timeline-arrow">→</span><span>车辆资源调配</span></div>
-<div class="timeline-content">
-<div class="timeline-item"><span class="tl-date">04/13</span><span class="tl-desc">深圳→淄博 8台H24(采集)</span></div>
-<div class="timeline-item"><span class="tl-date">05/13</span><span class="tl-desc">滨州→淄博 1台H24(M61回流)</span></div>
-<div class="timeline-item"><span class="tl-date">05/22</span><span class="tl-desc">深圳→淄博 2台H24(M61扩路)</span></div>
-<div class="timeline-item"><span class="tl-date">06/26</span><span class="tl-desc">深圳→淄博 5台H24G(路线验证)</span></div>
-<div class="timeline-item"><span class="tl-date">06/27</span><span class="tl-desc">深圳→淄博 5台M61(改制交付)</span></div>
-<div class="timeline-item"><span class="tl-date">06/29</span><span class="tl-desc">滨州→淄博 5台M61(落地测试)</span></div>
-<div class="timeline-item"><span class="tl-date">07/04</span><span class="tl-desc">深圳→淄博 5台H24G(整备完毕)</span></div>
-<div class="timeline-item"><span class="tl-date">07/10</span><span class="tl-desc">阜阳→淄博 8台M61(出厂交付)</span></div>
 </div>
 </div>
 
-<!-- ===== 三阶段划分（新增） ===== -->
-<div class="phase-section">
-<div class="phase-header"><span>📋</span><span>阶段划分与运营数据总览</span></div>
-<div class="phase-grid">
 
-<!-- ① 地图采集 -->
-<div class="phase-card phase-map">
-<span class="phase-badge">① 地图采集</span>
-<div class="phase-sub">
-<div class="phase-sub-title"><span class="phase-dot"></span>第一阶段 <span style="font-weight:normal;color:#888;font-size:9px">(4月13日 - 5月17日)</span></div>
-<div class="phase-stats">
-<div class="phase-stat-row"><span class="phase-stat-label">投入车辆数</span><span class="phase-stat-value">8 台</span></div>
-<div class="phase-stat-row"><span class="phase-stat-label">班次数</span><span class="phase-stat-value">115 次</span></div>
-<div class="phase-stat-row"><span class="phase-stat-label">人数</span><span class="phase-stat-value">9 人</span></div>
-<div class="phase-stat-row"><span class="phase-stat-label">采集有效率</span><span class="phase-stat-value"><span class="phase-efficiency">74%</span></span></div>
-</div>
-</div>
-<div class="phase-sub" style="margin-bottom:0">
-<div class="phase-sub-title"><span class="phase-dot"></span>第二阶段 <span style="font-weight:normal;color:#888;font-size:9px">(6月15日 - 7月5日)</span></div>
-<div class="phase-stats">
-<div class="phase-stat-row"><span class="phase-stat-label">投入车辆数</span><span class="phase-stat-value">5 台</span></div>
-<div class="phase-stat-row"><span class="phase-stat-label">班次数</span><span class="phase-stat-value">24 次</span></div>
-<div class="phase-stat-row"><span class="phase-stat-label">人数</span><span class="phase-stat-value">5 人</span></div>
-<div class="phase-stat-row"><span class="phase-stat-label">采集有效率</span><span class="phase-stat-value"><span class="phase-efficiency">70%</span></span></div>
-</div>
-</div>
-<div class="phase-cost-row">
-<span class="phase-cost-label">总体成本预计</span><span class="phase-cost-value">14.29 万元</span>
-</div>
-</div>
-
-<!-- ② 扩路测试 -->
-<div class="phase-card phase-expand">
-<span class="phase-badge">② 扩路测试</span>
-<div class="phase-sub" style="margin-bottom:0">
-<div class="phase-sub-title"><span class="phase-dot"></span>运营周期 <span style="font-weight:normal;color:#888;font-size:9px">(5月25日 - 至今)</span></div>
-<div class="phase-stats">
-<div class="phase-stat-row"><span class="phase-stat-label">共投入车辆数</span><span class="phase-stat-value">14 台</span></div>
-<div class="phase-stat-row"><span class="phase-stat-label">班次数</span><span class="phase-stat-value">139 次</span></div>
-<div class="phase-stat-row"><span class="phase-stat-label">人数</span><span class="phase-stat-value">12 人</span></div>
-<div class="phase-stat-row"><span class="phase-stat-label">单班次自驾里程</span><span class="phase-stat-value">80 km</span></div>
-<div class="phase-stat-row"><span class="phase-stat-label">单班次自驾时长</span><span class="phase-stat-value">3.1 h</span></div>
-</div>
-</div>
-<div class="phase-cost-row">
-<span class="phase-cost-label">总体成本预计</span><span class="phase-cost-value">11.32 万元</span>
-</div>
-</div>
-
-<!-- ③ M61验证 -->
-<div class="phase-card phase-m61">
-<span class="phase-badge">③ M61验证</span>
-<div class="phase-sub" style="margin-bottom:0">
-<div class="phase-sub-title"><span class="phase-dot"></span>运营周期 <span style="font-weight:normal;color:#888;font-size:9px">(6月22日 - 至今)</span></div>
-<div class="phase-stats">
-<div class="phase-stat-row"><span class="phase-stat-label">共投入车辆数</span><span class="phase-stat-value">20 台</span></div>
-<div class="phase-stat-row"><span class="phase-stat-label">班次数</span><span class="phase-stat-value">205 次</span></div>
-<div class="phase-stat-row"><span class="phase-stat-label">人数</span><span class="phase-stat-value">17 人</span></div>
-<div class="phase-stat-row"><span class="phase-stat-label">本周单班次自驾里程</span><span class="phase-stat-value">116.90 km</span></div>
-<div class="phase-stat-row"><span class="phase-stat-label">单班次自驾时长</span><span class="phase-stat-value">4.75 h</span></div>
-</div>
-</div>
-<div class="phase-cost-row">
-<span class="phase-cost-label">总体成本预计</span><span class="phase-cost-value">10.69 万元</span>
-</div>
-</div>
-
-</div>
-</div>
-
+<!-- ===== 图表区域 ===== -->
 <div class="main-chart-section">
 <div class="chart-header">
 <div class="chart-title-row">
@@ -202,12 +116,40 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 <div class="label-item"><div class="label-color" style="background:#BD10E0"></div><span>M61车型验证</span></div>
 </div>
 </div>
-<div class="stage-annotations">
-<span class="stage-tag" style="background:#FFF3E0;color:#E65100;">W16-W18 高精地图采集期</span>
-<span class="stage-tag" style="background:#E3F2FD;color:#1565C0;">W19-W25 扩路/M61启动</span>
-<span class="stage-tag" style="background:#F3E5F5;color:#7B1FA2;">W26-W28 规模化测试</span>
+</div>
+
+<!-- 车辆资源调配时间轴 -->
+<div class="resource-timeline">
+<div class="timeline-title"><span class="timeline-arrow">→</span><span>车辆资源调配</span></div>
+<div class="resource-axis">
+<div class="axis-line"></div>
+<div class="axis-weeks">
+<span>W16</span><span>W17</span><span>W18</span><span>W19</span><span>W20</span><span>W21</span><span>W22</span><span>W23</span><span>W24</span><span>W25</span><span>W26</span><span>W27</span><span>W28</span>
+</div>
+<div class="axis-node" style="left:1.5%"><div class="node-label"><div class="node-label-date">04/13</div><div class="node-label-desc">深圳→8台H24</div></div><div class="node-arrow"></div></div>
+<div class="axis-node" style="left:31%"><div class="node-label"><div class="node-label-date">05/13</div><div class="node-label-desc">滨州→1台H24</div></div><div class="node-arrow"></div></div>
+<div class="axis-node" style="left:41%"><div class="node-label"><div class="node-label-date">05/22</div><div class="node-label-desc">深圳→2台H24</div></div><div class="node-arrow"></div></div>
+<div class="axis-node" style="left:77%"><div class="node-label"><div class="node-label-date">06/26</div><div class="node-label-desc">深圳→5台H24G</div></div><div class="node-arrow"></div></div>
+<div class="axis-node" style="left:80.5%"><div class="node-label"><div class="node-label-date">06/27</div><div class="node-label-desc">深圳→5台M61</div></div><div class="node-arrow"></div></div>
+<div class="axis-node" style="left:84.5%"><div class="node-label"><div class="node-label-date">06/29</div><div class="node-label-desc">滨州→5台M61</div></div><div class="node-arrow"></div></div>
+<div class="axis-node" style="left:91%"><div class="node-label"><div class="node-label-date">07/04</div><div class="node-label-desc">深圳→5台H24G</div></div><div class="node-arrow"></div></div>
+<div class="axis-node" style="left:97%"><div class="node-label"><div class="node-label-date">07/10</div><div class="node-label-desc">阜阳→8台M61</div></div><div class="node-arrow"></div></div>
 </div>
 </div>
+
+<!-- 阶段色块条 -->
+<div class="phase-timeline-bar">
+<div class="phase-block map" style="flex:3;">① 地图采集</div>
+<div class="phase-gap" style="flex:1.5;"></div>
+<div class="phase-block expand" style="flex:3.5;">② 扩路测试</div>
+<div class="phase-gap" style="flex:0.5;"></div>
+<div class="phase-block m61" style="flex:2;">③ M61验证</div>
+<span class="phase-sub-label" style="left:15%;">W16-W20</span>
+<span class="phase-sub-label" style="left:52%;">W22-W25</span>
+<span class="phase-sub-label" style="left:86%;">W26-W28</span>
+</div>
+
+<!-- ECharts 图表 -->
 <div id="mainChart" class="chart-container"></div>
 </div>
 
@@ -254,7 +196,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 </div>
 </div>
 
-<div class="footer-note">数据来源：淄博路测原始数据 | 统计周期：2026年W16(04/13) ~ W28(07/12) | 城市范围：淄博市+滨州市+山东省+张店区 | 成本：淄博市5-6月实际发生成本 | VHR口径：车辆名称去重，约车ID计数</div>
+<div class="footer-note">数据来源：淄博路测原始数据 | 统计周期：2026年W16(04/13) ~ W28(07/12) | 城市范围：淄博市+滨州市+山东省+张店区 | VHR口径：车辆名称去重，约车ID计数</div>
 
 <script>
 var weeks = ["2026W16\n04/13-04/19", "2026W17\n04/20-04/26", "2026W18\n04/27-05/03", "2026W19\n05/04-05/10", "2026W20\n05/11-05/17", "2026W21\n05/18-05/24", "2026W22\n05/25-05/31", "2026W23\n06/01-06/07", "2026W24\n06/08-06/14", "2026W25\n06/15-06/21", "2026W26\n06/22-06/28", "2026W27\n06/29-07/05", "2026W28\n07/06-07/12"];
@@ -269,7 +211,7 @@ function initChart() {
     var option = {
 tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'rgba(255,255,255,0.95)',borderColor:'#ddd',borderWidth:1,textStyle:{fontSize:10},formatter:function(params){var r=params[0].axisValue.replace(/\n/g,' ')+'<br/>';var tv=0,ts=0;params.forEach(function(p){if(p.seriesName&&p.value>0){r+=p.marker+p.seriesName+': '+p.value+(p.seriesIndex<5?' 台':' 次')+'<br/>';if(p.seriesIndex<5)tv+=p.value;else ts+=p.value}});r+='----------------<br/>合计车辆: '+tv+' 台<br/>合计班次: '+ts+' 次';return r}},
 legend:{show:false},
-grid:{left:'3%',right:'5%',bottom:'10%',top:'15%',containLabel:true},
+grid:{left:'3%',right:'5%',bottom:'8%',top:'10%',containLabel:true},
 xAxis:{type:'category',data:weeks,axisLabel:{fontSize:10,interval:0,rotate:35,color:'#333',fontWeight:'500',formatter:function(v){return v.split(String.fromCharCode(10))[1]||v}},axisLine:{lineStyle:{color:'#999',width:1.5}},axisTick:{show:true,lineStyle:{color:'#999'}},name:'自然周',nameTextStyle:{fontSize:10,color:'#333',fontWeight:'bold'}},
 yAxis:[{type:'value',name:'车辆数(台)',nameTextStyle:{fontSize:9,color:'#666'},position:'left',max:40,axisLabel:{fontSize:8},splitLine:{lineStyle:{type:'dashed',color:'#eee'}}},{type:'value',name:'班次数(次)',nameTextStyle:{fontSize:9,color:'#666'},position:'right',max:220,axisLabel:{fontSize:8},splitLine:{show:false}}],
 series:[
